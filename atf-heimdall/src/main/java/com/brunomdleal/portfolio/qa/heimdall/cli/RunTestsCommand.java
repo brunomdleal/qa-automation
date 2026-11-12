@@ -1,6 +1,9 @@
 package com.brunomdleal.portfolio.qa.heimdall.cli;
 
 import com.brunomdleal.portfolio.qa.heimdall.model.HeimdallRequest;
+import com.brunomdleal.portfolio.qa.odin.OdinOrchestrator;
+import com.brunomdleal.portfolio.qa.odin.model.OdinRequest;
+import com.brunomdleal.portfolio.qa.odin.model.OdinResponse;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
@@ -14,6 +17,16 @@ import java.util.concurrent.Callable;
         description = "Guardian of the Bifröst — validates ATF inputs and dispatches test runs."
 )
 public class RunTestsCommand implements Callable<Integer> {
+
+    private final OdinOrchestrator odinOrchestrator;
+
+    public RunTestsCommand() {
+        this(new OdinOrchestrator());
+    }
+
+    RunTestsCommand(OdinOrchestrator odinOrchestrator) {
+        this.odinOrchestrator = odinOrchestrator;
+    }
 
     @Option(
             names = {"-e", "--env"},
@@ -44,16 +57,23 @@ public class RunTestsCommand implements Callable<Integer> {
     private boolean parallel;
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         HeimdallRequest request = new HeimdallRequest(environment, baseUrl, tags, parallel);
 
         renderHeader();
         renderRequestSummary(request);
 
-        // Standalone stub response — will be replaced by OdinOrchestrator call in the next step
-        System.out.println("\n[HEIMDALL] Input validated. Ready to dispatch to Odin.");
-        System.out.println("[STATUS]   SUCCESS (Standalone Gatekeeper Check)");
-        return 0;
+        OdinRequest odinRequest = new OdinRequest(
+                request.environment(),
+                request.baseUrl(),
+                request.tags(),
+                request.parallel()
+        );
+
+        OdinResponse odinResponse = odinOrchestrator.run(odinRequest);
+
+        renderExecutionReport(odinResponse);
+        return odinResponse.success() ? 0 : 1;
     }
 
     private void renderHeader() {
@@ -71,5 +91,19 @@ public class RunTestsCommand implements Callable<Integer> {
         );
         System.out.printf("%-12s: %s%n", "Tags", String.join(", ", request.tags()));
         System.out.printf("%-12s: %s%n", "Parallel", request.parallel());
+    }
+
+    private void renderExecutionReport(OdinResponse response) {
+        System.out.println("--------------------------------------------------");
+        System.out.printf("%-12s: %s%n", "Target URL", response.resolvedBaseUrl());
+        System.out.printf("%-12s: %d total | %d passed | %d failed (%dms)%n",
+                "Results",
+                response.totalTests(),
+                response.passedTests(),
+                response.failedTests(),
+                response.durationMillis());
+        System.out.printf("%-12s: %s%n", "Report", response.reportPath());
+        System.out.printf("%-12s: %s%n", "Summary", response.summaryMessage());
+        System.out.printf("%-12s: %s%n", "Status", response.success() ? "SUCCESS" : "FAILURE");
     }
 }
