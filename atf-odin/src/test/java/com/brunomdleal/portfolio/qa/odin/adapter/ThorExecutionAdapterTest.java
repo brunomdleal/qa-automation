@@ -52,7 +52,6 @@ class ThorExecutionAdapterTest {
             }
         };
 
-        ThorExecutionAdapter adapter = new ThorExecutionAdapter(stubThor);
-        return adapter;
+        return new ThorExecutionAdapter(stubThor);
     }
 }
