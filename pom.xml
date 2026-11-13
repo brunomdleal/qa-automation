@@ -17,6 +17,7 @@
         <module>atf-heimdall</module>
         <module>atf-odin</module>
         <module>atf-thor</module>
+        <module>atf-mimir</module>
     </modules>
 
     <properties>
