@@ -1,5 +1,6 @@
 package com.brunomdleal.portfolio.qa.odin;
 
+import com.brunomdleal.portfolio.qa.odin.adapter.ThorExecutionAdapter;
 import com.brunomdleal.portfolio.qa.odin.config.EnvironmentResolver;
 import com.brunomdleal.portfolio.qa.odin.model.ExecutionOutcome;
 import com.brunomdleal.portfolio.qa.odin.model.ExecutionPlan;
@@ -15,7 +16,7 @@ public class OdinOrchestrator {
     private final ReportingPort reportingPort;
 
     public OdinOrchestrator() {
-        this(new EnvironmentResolver(), ExecutionPort.standaloneStub(), ReportingPort.standaloneStub());
+        this(new EnvironmentResolver(), new ThorExecutionAdapter(), ReportingPort.standaloneStub());
     }
 
     public OdinOrchestrator(

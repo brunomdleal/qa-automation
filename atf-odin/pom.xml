@@ -16,9 +16,15 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.jupiter.version>6.1.3</junit.jupiter.version>
         <maven.surefire.plugin.version>3.6.0</maven.surefire.plugin.version>
+        <atf.thor.version>1.0.0</atf.thor.version>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.brunomdleal.portfolio.qa</groupId>
+            <artifactId>atf-thor</artifactId>
+            <version>${atf.thor.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
