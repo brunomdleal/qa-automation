@@ -17,6 +17,7 @@
         <junit.jupiter.version>6.1.3</junit.jupiter.version>
         <maven.surefire.plugin.version>3.6.0</maven.surefire.plugin.version>
         <atf.thor.version>1.0.0</atf.thor.version>
+        <atf.mimir.version>1.0.0</atf.mimir.version>
     </properties>
 
     <dependencies>
@@ -24,6 +25,11 @@
             <groupId>com.brunomdleal.portfolio.qa</groupId>
             <artifactId>atf-thor</artifactId>
             <version>${atf.thor.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.brunomdleal.portfolio.qa</groupId>
+            <artifactId>atf-mimir</artifactId>
+            <version>${atf.mimir.version}</version>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
